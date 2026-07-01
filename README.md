@@ -8,22 +8,72 @@ This project demonstrates the design and deployment of a **highly available, sca
 It provisions a complete cloud environment including networking, compute, load balancing, and storage services across multiple Availability Zones.
 The goal of this project is to simulate a real-world production environment and demonstrate DevOps and Cloud Engineering skills.
 
-## 🏗️ Architecture
+🏗️ AWS Architecture (Terraform Project)
+📌 High-Level Architecture
+                          ┌──────────────────────────────┐
+                          │          Internet            │
+                          └────────────┬─────────────────┘
+                                       │
+                                       ▼
+                        ┌──────────────────────────────┐
+                        │  Application Load Balancer   │
+                        │        (ALB - HTTP 80)       │
+                        └────────────┬─────────────────┘
+                                     │
+            ┌────────────────────────┴────────────────────────┐
+            │                                                 │
+            ▼                                                 ▼
+┌──────────────────────────┐                      ┌──────────────────────────┐
+│  EC2 Instance 1          │                      │  EC2 Instance 2          │
+│  Ubuntu + Apache         │                      │  Ubuntu + Apache         │
+│  Public Subnet (AZ-1a)   │                      │  Public Subnet (AZ-1b)   │
+└─────────────┬────────────┘                      └─────────────┬────────────┘
+              │                                                 │
+              └──────────────────────┬──────────────────────────┘
+                                     ▼
+                           ┌──────────────────────┐
+                           │   Target Group       │
+                           │  Health Checks (/ )  │
+                           └──────────────────────┘
+                           
 
-                    Internet
-                        |
-                        v
-            ┌──────────────────────┐
-            │  Application Load    │
-            │     Balancer (ALB)   │
-            └─────────┬────────────┘
-                      |
-      ┌───────────────┴───────────────┐
-      |                               |
-      v                               v
+🌐 Networking Layer (VPC Design)
+                    ┌──────────────────────────────┐
+                    │            VPC               │
+                    │   192.168.0.0/16             │
+                    └────────────┬─────────────────┘
+                                 │
+        ┌────────────────────────┴────────────────────────┐
+        │                                                 │
+        ▼                                                 ▼
+┌──────────────────────┐                     ┌──────────────────────┐
+│ Public Subnet 1      │                     │ Public Subnet 2      │
+│ AZ-1a                │                     │ AZ-1b                │
+│ EC2 Instance 1       │                     │ EC2 Instance 2       │
+└──────────────────────┘                     └──────────────────────┘
 
+⚖️ Load Balancing Flow
+User Request (Browser)
+        │
+        ▼
+Application Load Balancer (ALB)
+        │
+        ▼
+Target Group (Health Checks Enabled)
+        │
+   ┌────┴─────┐
+   ▼           ▼
+EC2-1       EC2-2
+(Server 1)  (Server 2)
 
----
+☁️ Storage Layer
+Terraform Managed S3 Bucket
+        │
+        ▼
+Used for:
+- Static storage 
+- Public access enabled (optional)
+
 
 ## ⚙️ Tech Stack
 
@@ -121,6 +171,9 @@ alb_dns_name = my-lb-xxxxxxxx.us-east-2.elb.amazonaws.com
 Open in browser:
 
 http://<alb_dns_name>
+
+<img width="1090" height="529" alt="Screenshot 2026-06-28 022453" src="https://github.com/user-attachments/assets/4022356d-c96e-449f-8770-483081e53198" />
+
 
 You will see responses like:
 Server 1

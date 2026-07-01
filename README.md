@@ -172,7 +172,7 @@ Open in browser:
 
 http://<alb_dns_name>
 
-<img width="1090" height="529" alt="Screenshot 2026-06-28 022453" src="https://github.com/user-attachments/assets/4022356d-c96e-449f-8770-483081e53198" />
+<img width="2240" height="1400" alt="Screenshot (540)" src="https://github.com/user-attachments/assets/2950df19-020e-4b92-9aef-4cefd504e2fb" />
 
 
 You will see responses like:
